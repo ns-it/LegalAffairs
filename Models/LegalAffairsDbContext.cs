@@ -24,6 +24,11 @@ namespace LegalAffairs.Models
         public virtual DbSet<Reading> Readings { get; set; }
         public virtual DbSet<Rule> Rules { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<RuleAttachement> RuleAttachements { get; set; }
+        public virtual DbSet<Issuer> Issuers { get; set; }
+        public virtual DbSet<Topic> Topics { get; set; }
+
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,9 +42,7 @@ namespace LegalAffairs.Models
         {
             modelBuilder.Entity<CaseOwner>(entity =>
             {
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
+                entity.Property(e => e.FullName).HasComputedColumnSql("(concat([first_name],' ',[middle_name],' ',[last_name]))");
 
                 entity.HasOne(d => d.LatestUpdateUser)
                     .WithMany(p => p.CaseOwners)
@@ -51,10 +54,6 @@ namespace LegalAffairs.Models
             {
                 entity.HasKey(e => new { e.CaseYear, e.AnnualSerialNumber })
                     .HasName("PK_case");
-
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
 
                 entity.HasOne(d => d.CaseOwner)
                     .WithMany(p => p.Cases)
@@ -68,14 +67,18 @@ namespace LegalAffairs.Models
                     .HasConstraintName("FK_case_user");
             });
 
+            modelBuilder.Entity<Issuer>(entity =>
+            {
+                entity.HasKey(e => e.IssuerId)
+                    .HasName("PK_Table_1");
+
+                entity.Property(e => e.IssuerId).ValueGeneratedNever();
+            });
+
             modelBuilder.Entity<InBook>(entity =>
             {
                 entity.HasKey(e => new { e.InYear, e.InSerialNumber })
                     .HasName("PK_in_book");
-
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
 
                 entity.HasOne(d => d.LatestUpdateUser)
                     .WithMany(p => p.InBooks)
@@ -89,10 +92,6 @@ namespace LegalAffairs.Models
                     .HasName("PK_movement");
 
                 entity.Property(e => e.SerialNumber).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
 
                 entity.HasOne(d => d.LatestUpdateUser)
                     .WithMany(p => p.Movements)
@@ -121,10 +120,6 @@ namespace LegalAffairs.Models
                 entity.HasKey(e => new { e.OutYear, e.OutSerialNumber })
                     .HasName("PK_out_book");
 
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
-
                 entity.HasOne(d => d.LatestUpdateUser)
                     .WithMany(p => p.OutBooks)
                     .HasForeignKey(d => d.LatestUpdateUserId)
@@ -133,10 +128,6 @@ namespace LegalAffairs.Models
 
             modelBuilder.Entity<Reading>(entity =>
             {
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
-
                 entity.HasOne(d => d.LatestUpdateUser)
                     .WithMany(p => p.Readings)
                     .HasForeignKey(d => d.LatestUpdateUserId)
@@ -150,18 +141,57 @@ namespace LegalAffairs.Models
 
             modelBuilder.Entity<Rule>(entity =>
             {
-                entity.HasKey(e => new { e.RuleYear, e.AnnualSerialNumber })
-                    .HasName("PK_rule");
+                entity.HasKey(e => e.RuleId)
+                .HasName("PK_rule");
 
-                entity.Property(e => e.LatestUpdateTimestamp)
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
+                entity.HasIndex(e => new { e.IssuerId, e.RuleYear, e.AnnualSerialNumber })
+                    .HasName("IX_rules")
+                    .IsUnique();
 
                 entity.HasOne(d => d.LatestUpdateUser)
                     .WithMany(p => p.Rules)
                     .HasForeignKey(d => d.LatestUpdateUserId)
                     .HasConstraintName("FK_rule_user");
+
+                entity.HasOne(d => d.Issuer)
+                 .WithMany(p => p.Rules)
+                 .HasForeignKey(d => d.IssuerId)
+                 .HasConstraintName("FK_rules_issuers");
+
+                entity.HasOne(d => d.Topic)
+                   .WithMany(p => p.Rules)
+                   .HasForeignKey(d => d.TopicId)
+                   .HasConstraintName("FK_rules_topics");
             });
+
+            modelBuilder.Entity<RuleAttachement>(entity =>
+            {
+                entity.HasKey(e => new { e.RuleId, e.AttachmentNumber })
+                 .HasName("PK_rules_attachements");
+
+                entity.HasOne(d => d.Rule)
+                    .WithMany(p => p.RuleAttachements)
+                    .HasForeignKey(d => d.RuleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_rule_attachements_rules");
+            });
+
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.FullName).HasComputedColumnSql("(concat([first_name],' ',[last_name]))");
+            });
+
+            modelBuilder.Entity<Topic>(entity =>
+            {
+                entity.Property(e => e.TopicId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.ParentTopic)
+                    .WithMany(p => p.Children)
+                    .HasForeignKey(d => d.ParentTopicId)
+                    .HasConstraintName("FK_topics_topics");
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

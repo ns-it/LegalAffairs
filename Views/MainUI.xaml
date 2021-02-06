@@ -4,9 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LegalAffairs.Views"
+        xmlns:viewmodels="clr-namespace:LegalAffairs.ViewModels"
         mc:Ignorable="d"
-        Title="MainUI" Height="450" Width="800">
+        Title="برنامج أرشفة الشؤون القانونية - الصفحة الرئيسية" Height="450" Width="800" MinHeight="650" MinWidth="920"
+        FlowDirection="RightToLeft" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewmodels:MainUIViewModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="القوانين">
+                <local:RulesMainFullLayout/>
+            </TabItem>
+            <TabItem Header="القضايا" >
+                <local:CasesMain/>
+            </TabItem>
+            <TabItem Header="البريد الصادر" IsEnabled="False">
+                <local:OutboxMain/>
+            </TabItem>
+            <TabItem Header="البريد الوارد" IsEnabled="False">
+                <local:InboxMain/>
+            </TabItem>
+            <TabItem Header="المطالعات" IsEnabled="False">
+                <local:ReadingsMain/>
+            </TabItem>
+        </TabControl>
+        <StatusBar Height="auto" Grid.Row="1">
+            <StatusBarItem x:Name="UserName" Content="{Binding StatusBarContent}" />
+            <Separator/>
+            <StatusBarItem>
+                <Hyperlink x:Name="ChangeUser" Click="ChangeUser_Click">تبديل المستخدم</Hyperlink>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

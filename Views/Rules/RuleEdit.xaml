@@ -1,51 +1,128 @@
-﻿<Window x:Class="LegalAffairs.Views.RuleEdit"
+﻿<UserControl x:Class="LegalAffairs.Views.RuleEdit"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:LegalAffairs.ViewModels"
         xmlns:local="clr-namespace:LegalAffairs.Views"
-        mc:Ignorable="d"
-        Title="RuleEdit" Height="450" Width="800" FlowDirection="RightToLeft">
-    <Grid Margin="30,30,30,30">
+        mc:Ignorable="d" Width="auto" Height="auto"
+             FlowDirection="RightToLeft">
+    <!--Title="RuleEdit" Height="450" Width="800" FlowDirection="RightToLeft" WindowStartupLocation="CenterScreen"-->
+
+    <!--<UserControl.DataContext>
+        <viewmodels:RuleEditViewModel/>
+    </UserControl.DataContext>-->
+
+    <Grid Margin="20,20,20,20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition />
+            <ColumnDefinition Width="auto" MinWidth="120" />
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="15"/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition/>
+
             <RowDefinition Height="auto"/>
+
             <RowDefinition Height="auto"/>
-            <RowDefinition/>
+
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="تعديل قانون" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="6" Text="{Binding Message}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource TitleBlock}"/>
+        <StackPanel Grid.Row="1"  Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button  Content="▶" ToolTip="السابق" Command="{Binding PreviousCommand}"/>
+            <Button  Content="◀" ToolTip="التالي" Command="{Binding NextCommand}"/>
+            <Label Content="{Binding AttachementsLabel}"/>
+        </StackPanel>
 
-        <Label Grid.Row="1" Grid.Column="2" Content ="إضافة مرفق" HorizontalAlignment="Left"/>
-        <Button Grid.Row="1"  Grid.Column="3" Content="🔗" HorizontalAlignment="Right"/>
-   
-        <Label Grid.Row="2" Grid.Column="0" Content="العام" VerticalAlignment="Bottom"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="yearComboBox" Width="auto" VerticalAlignment="Bottom">
-            <ComboBoxItem Content="2015" IsSelected="True"/>
-        </ComboBox>
-        <Label Grid.Row="3" Grid.Column="0" Content="رقم القرار" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <!--<Label Grid.Row="1" Grid.Column="2" Content ="إضافة مرفق" HorizontalAlignment="Left"/>-->
+        <StackPanel Grid.Row="1"  Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <!--<Button  Content="✖" ToolTip="إلغاء" IsEnabled="False" />-->
 
-        <Label Grid.Row="4" Grid.Column="0" Content="الجهة المصدرة" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            <Button  Content="✔" ToolTip="حفظ تعديلات المرفقات"  Command="{Binding SaveAttachementsCommand}" Foreground="Green"/>
+            <Button  Content="➕" ToolTip="إضافة مرفق" Style="{StaticResource Add}" Command="{Binding AddAttachementCommand}"/>
+            <Button  Content="✏" ToolTip="تعديل مرفق" Style="{StaticResource Edit}" Command="{Binding EditAttachementCommand}"/>
+            <Button  Content="🗑" ToolTip="حذف مرفق" Style="{StaticResource Delete}" Command="{Binding DeleteAttachementCommand}"/>
 
-        <Label Grid.Row="5" Grid.Column="0" Content="الموضوع" VerticalAlignment="Top"/>
-        <TextBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+            <Button  Content="🔗" ToolTip="تعديل المرفقات" Command="{Binding ModifyAttachementsCommand}" />
+            <Button  Content="🖨" ToolTip="طباعة" Command="{Binding PrintCommand}"/>
 
-        <DockPanel Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="4">
-            <Image />
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Top">
+            <Label Grid.Row="2" Grid.Column="0" Content="العام" VerticalAlignment="Bottom" />
+            <ComboBox Grid.Row="2" Grid.Column="1" x:Name="yearComboBox" Width="90" 
+                  ItemsSource="{Binding YearsList}" SelectedValue="{Binding CurrentRule.RuleYear}" IsEnabled="{Binding IsEditModeOff}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Top">
+            <Label Grid.Row="3" Grid.Column="0" Content="رقم القرار" VerticalAlignment="Center"/>
+            <TextBox x:Name="SNTextBox"
+                   
+                     PreviewTextInput="TextBox_PreviewTextInput"
+                     IsEnabled="{Binding IsEditModeOff}"
+                     Text="{Binding CurrentRule.AnnualSerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True, ValidatesOnDataErrors=True}">
+                <!--<TextBox.Text>
+                    <Binding Path="CurrentRule.AnnualSerialNumber" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>-->
+            </TextBox>
+
+            <!--Text="{Binding CurrentRule.AnnualSerialNumber,ValidatesOnDataErrors=True, NotifyOnValidationError=True}"-->
+            <!--<Button Grid.Row="3" Grid.Column="2" Content="حفظ" Width="auto" HorizontalAlignment="Right" Style="{StaticResource RoundButton}"
+                    Command="{Binding ConfirmAddCommand}"/>-->
+
+        </StackPanel>
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+            <Label Grid.Row="4" Grid.Column="0" Content="الجهة المصدرة" VerticalAlignment="Bottom"/>
+            <ComboBox x:Name="issuersComboBox" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+               ItemsSource="{Binding IssuersList}"  SelectedValue="{Binding CurrentRule.IssuerId}" SelectedValuePath="IssuerId" 
+                      DisplayMemberPath="IssuerName"  IsEnabled="{Binding IsEditModeOff}"/>
+        </StackPanel>
+        <StackPanel  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" >
+            <Label Grid.Row="5" Grid.Column="0" Content="الموضوع" VerticalAlignment="Top" />
+            <ComboBox x:Name="topicsComboBox" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" 
+               ItemsSource="{Binding TopicsList}"    SelectedValue="{Binding CurrentRule.TopicId}"  SelectedValuePath="TopicId"
+                      DisplayMemberPath="TopicName" />
+        </StackPanel>
+        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" VerticalAlignment="Center">
+            <Run Text="{Binding ValidationMessages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </TextBlock>
+        <DockPanel x:Name="ImageContainer" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="5" FlowDirection="LeftToRight">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="/images/image-placeholder.png" Stretch="UniformToFill" TileMode="None"/>
+            </DockPanel.Background>
+
+            <Image Source="{Binding AttachementPath}" Width="{Binding ElementName=ImageContainer, Path=ActualWidth}" 
+                   Height="{Binding ElementName=ImageContainer, Path=ActualHeight}" MinWidth="400" MinHeight="300">
+    
+            </Image>
+            <!--<DocumentViewer Width="400" Height="300" MaxWidth="400" MaxHeight="300">
+                <FixedDocument>
+                    </FixedDocument>
+            </DocumentViewer>-->
         </DockPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" HorizontalAlignment="Right">
+            <Button Grid.Column="3" Grid.Row="6" x:Name="AddButton" Content ="حفظ التعديلات" Style="{StaticResource RoundButton}"
+                IsDefault="True" 
+                Command="{Binding SaveCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button x:Name="CancelButton" Content ="إلغاء الأمر" Style="{StaticResource RoundButton}"
+                    Command="{Binding CancelCommand}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    />
+            <!--IsCancel="True"/>-->
+        </StackPanel>
 
-        <Button Grid.Column="2" Grid.Row="6" x:Name="AddButton" Content ="حفظ التعديلات"/>
-        <Button Grid.Column="3" Grid.Row="6" x:Name="CancelButton" Content ="إلغاء الأمر"/>
     </Grid>
-</Window>
+</UserControl>

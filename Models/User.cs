@@ -34,6 +34,9 @@ namespace LegalAffairs.Models
         [Column("last_name")]
         [StringLength(30)]
         public string LastName { get; set; }
+        [Column("full_name")]
+        [StringLength(61)]
+        public string FullName { get; set; }
 
         [InverseProperty("LatestUpdateUser")]
         public virtual ICollection<CaseOwner> CaseOwners { get; set; }

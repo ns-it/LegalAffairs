@@ -15,7 +15,7 @@ namespace LegalAffairs.Views
     /// <summary>
     /// Interaction logic for MovementsMain.xaml
     /// </summary>
-    public partial class MovementsMain : Window
+    public partial class MovementsMain 
     {
         public MovementsMain()
         {

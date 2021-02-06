@@ -32,7 +32,7 @@ namespace LegalAffairs.Models
         [Column("latest_update_user_id")]
         public int? LatestUpdateUserId { get; set; }
         [Column("latest_update_timestamp")]
-        public byte[] LatestUpdateTimestamp { get; set; }
+        public DateTime? LatestUpdateTimestamp { get; set; }
 
         [ForeignKey(nameof(LatestUpdateUserId))]
         [InverseProperty(nameof(User.InBooks))]

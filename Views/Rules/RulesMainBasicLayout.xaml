@@ -1,0 +1,199 @@
+﻿<UserControl x:Class="LegalAffairs.Views.RulesMainBasicLayout"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LegalAffairs.Views"
+             xmlns:viewmodels="clr-namespace:LegalAffairs.ViewModels"
+        mc:Ignorable="d"
+        d:DesignHeight="800" d:DesignWidth="1000" Height="auto" Width="auto"
+             FlowDirection="RightToLeft">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type CheckBox}">
+            <Style.Resources>
+                <Style TargetType="{x:Type Path}">
+                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="{x:Type GroupBox}">
+            <Setter Property="Padding" Value="5,5,5,5"/>
+            <Setter Property="Margin" Value="8,8,8,8"/>
+        </Style>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <viewmodels:RulesMainViewModel/>
+    </UserControl.DataContext>
+    <Grid Margin="10,11,10,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto" MinWidth="250"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="2*" MinHeight="180"/>
+            <RowDefinition  Height="1*" MinHeight="140"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="المكتبة الإلكترونية" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource TitleBlock}" />
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="بحث" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource TitleBlock}" FontSize="18"/>
+
+        <!--<Label Grid.Row="2" Grid.Column="0" Content="حسب الرقم:" HorizontalAlignment="Right" VerticalAlignment="Top"/>-->
+        <GroupBox Header="حسب الرقم" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch">
+            <UniformGrid Columns="3">
+
+                <ComboBox x:Name="yearComboBox" Width="auto" VerticalAlignment="Top"
+                          ItemsSource="{Binding YearsList}" SelectedValue="{Binding SearchRuleYear}"/>
+                <TextBox x:Name="ruleIdTextBox" Text="{Binding SearchASN}" VerticalAlignment="Top" Width="auto"/>
+                <Button Grid.Row="5" Grid.Column="1" x:Name="SearchByNumberButton" Content="بحث" Style="{StaticResource RoundButton}"
+                        VerticalAlignment="Top" HorizontalAlignment="Right"/>
+
+            </UniformGrid>
+
+
+        </GroupBox>
+
+        <!--<Label Grid.Row="3" Grid.Column="0" Content="حسب الموضوع:" HorizontalAlignment="Right" VerticalAlignment="Top" UseLayoutRounding="False"/>-->
+        <GroupBox Header="حسب الموضوع" Grid.Row="3" Grid.Column="1" >
+            <TreeView Grid.Row="3" Grid.Column="1" BorderBrush="Transparent" ItemsSource="{Binding TopicsList}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate 
+                         DataType="{x:Type viewmodels:TreeViewItemViewModel}" 
+                        ItemsSource="{Binding ChildItems}"
+                        
+                        >
+                        <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Header}"/>
+
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <!--<TreeViewItem IsExpanded="True">
+                    <TreeViewItem.Header>
+                        <CheckBox Content="عقود" IsChecked="{x:Null}"/>
+                    </TreeViewItem.Header>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <CheckBox IsChecked="True">
+                                <CheckBox.Content>
+                                    إنشائية
+                                </CheckBox.Content>
+                            </CheckBox> 
+                          
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <CheckBox Content="استثمارية"/>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem>
+                    <TreeViewItem.Header>
+                        <CheckBox Content="طلاب"/>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
+                <TreeViewItem IsExpanded="True">
+                    <TreeViewItem.Header>
+                        <CheckBox Content="عاملين"/>
+                    </TreeViewItem.Header>
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <CheckBox Content="إداريين"/>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem IsExpanded="True">
+                        <TreeViewItem.Header>
+                            <CheckBox Content="أعضاء هيئة تعليمية"/>
+                        </TreeViewItem.Header>
+                        <TreeViewItem>
+                            <TreeViewItem.Header>
+                                <CheckBox Content="أعضاء هيئة تدريسية"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem>
+                            <TreeViewItem.Header>
+                                <CheckBox Content="أعضاء هيئة فنية"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem>
+                            <TreeViewItem.Header>
+                                <CheckBox Content="معيدون"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem>
+                    <TreeViewItem.Header>
+                        <CheckBox Content="مواضيع أخرى"/>
+                    </TreeViewItem.Header>
+                </TreeViewItem>-->
+            </TreeView>
+        </GroupBox>
+
+
+        <!--<Label Grid.Row="4" Grid.Column="0" Content="حسب الجهة المصدرة:" HorizontalAlignment="Right" VerticalAlignment="Top"/>-->
+        <GroupBox Header="حسب الجهة المصدرة" Grid.Row="4" Grid.Column="1">
+            <TreeView Grid.Row="4" Grid.Column="1" BorderBrush="Transparent" ItemsSource="{Binding IssuersList}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate 
+                         DataType="{x:Type viewmodels:TreeViewItemViewModel}"
+                        ItemsSource="{Binding ChildItems}">
+                        <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Header}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <!--<TreeViewItem>
+                    <TreeViewItem.Header>
+                        <CheckBox Content="مراسيم"/>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
+                <TreeViewItem>
+                    <TreeViewItem.Header>
+                        <CheckBox Content="رئاسة وزراء"/>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
+                <TreeViewItem>
+                    <TreeViewItem.Header>
+                        <CheckBox Content="مجلس تعليم عالي"/>
+                    </TreeViewItem.Header>
+                </TreeViewItem>-->
+            </TreeView>
+        </GroupBox>
+
+        <Button Command="{Binding SearchCommand}"
+                Style="{StaticResource RoundButton}"
+            Grid.Row="5" Grid.Column="1" x:Name="SearchButton" 
+            Content="بحث" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <DataGrid Grid.Column="2" Grid.Row="2" Grid.RowSpan="3" x:Name="RulesGrid"
+                  ItemsSource="{Binding RulesList}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="السنة" Binding="{Binding RuleYear}"/>
+                <DataGridTextColumn Header="رقم القانون" Binding="{Binding AnnualSerialNumber}"/>
+                <DataGridTextColumn Header="الجهة المصدرة" Binding="{Binding Issuer}"/>
+                <DataGridTextColumn Header="الموضوع" Width="*" Binding="{Binding Topic}"/>
+                <DataGridTemplateColumn>
+
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Style="{StaticResource RoundButton}"
+                Grid.Row="5" Grid.Column="2" x:Name="AddButton" 
+                Content="إضافة" HorizontalAlignment="Right" 
+                
+                />
+        <!--Click="AddButton_Click"-->
+
+    </Grid>
+</UserControl>

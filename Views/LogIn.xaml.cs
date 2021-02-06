@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LegalAffairs.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -20,6 +21,22 @@ namespace LegalAffairs.Views
         public LogIn()
         {
             InitializeComponent();
+        }
+
+        private void Confirm_Click(object sender, RoutedEventArgs e)
+        {
+            LogInViewModel vm = DataContext as LogInViewModel;
+            vm.ConfirmCredentialsAction(passwordBox);
+
+            if (vm.UserExists)
+            {
+                new MainUI()
+                {
+                    DataContext = new MainUIViewModel(vm.CurrentUser)
+                }.Show();
+
+                this.Close();
+            }
         }
     }
 }

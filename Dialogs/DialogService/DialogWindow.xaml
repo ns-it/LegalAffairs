@@ -1,0 +1,33 @@
+﻿<Window x:Class="LegalAffairs.Dialogs.DialogService.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LegalAffairs.Dialogs.DialogService"
+        mc:Ignorable="d"
+Title="{Binding Message}" Height="150" Width="300" 
+        WindowStartupLocation="CenterOwner" 
+        Margin="0,0,-1,0" 
+        SizeToContent="WidthAndHeight"
+        ResizeMode="CanResize"
+        WindowStyle="None" FlowDirection="RightToLeft"
+        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" 
+        >
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="35"/>
+        </WindowChrome.WindowChrome>
+    
+            <DockPanel>
+        <DockPanel x:Name="TitleBar" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown">
+            <!--<Button   x:Name="CloseButton" Content="x" Style="{StaticResource Delete}" Width="30"  
+                      Click="CloseButton_Click" DockPanel.Dock="Right" VerticalAlignment="Top"/>-->
+            <Label DockPanel.Dock="Left" Content="{Binding Message}" Height="auto" Padding="6" />
+            <!--<Label Content="{viewmodels:Loc Title}"/>-->
+
+        </DockPanel>
+
+        <ContentPresenter x:Name="ContentPresenter" Content="{Binding}"/>
+    </DockPanel>
+    <!--<ContentPresenter x:Name="ContentPresenter" Content="{Binding}"/>-->
+
+</Window>

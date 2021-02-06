@@ -21,5 +21,11 @@ namespace LegalAffairs.Views
         {
             InitializeComponent();
         }
+
+        private void ChangeUser_Click(object sender, RoutedEventArgs e)
+        {
+            new LogIn().Show();
+            this.Close();
+        }
     }
 }

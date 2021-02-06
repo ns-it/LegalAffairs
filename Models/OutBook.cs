@@ -27,8 +27,8 @@ namespace LegalAffairs.Models
         [Column("destination")]
         [StringLength(50)]
         public string Destination { get; set; }
-        [Column("latest_update_timestamp")]
-        public byte[] LatestUpdateTimestamp { get; set; }
+        [Column("latest_update_timestamp", TypeName = "datetime")]
+        public DateTime? LatestUpdateTimestamp { get; set; }
         [Column("latest_update_user_id")]
         public int? LatestUpdateUserId { get; set; }
 

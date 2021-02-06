@@ -15,7 +15,7 @@ namespace LegalAffairs.Views
     /// <summary>
     /// Interaction logic for CasesMain.xaml
     /// </summary>
-    public partial class CasesMain : Window
+    public partial class CasesMain 
     {
         public CasesMain()
         {

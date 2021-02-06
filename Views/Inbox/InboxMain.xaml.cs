@@ -15,7 +15,7 @@ namespace LegalAffairs.Views
     /// <summary>
     /// Interaction logic for InboxMain.xaml
     /// </summary>
-    public partial class InboxMain : Window
+    public partial class InboxMain 
     {
         public InboxMain()
         {

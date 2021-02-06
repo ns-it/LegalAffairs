@@ -4,30 +4,57 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LegalAffairs.Views"
+        xmlns:viewmodels="clr-namespace:LegalAffairs.ViewModels"
         mc:Ignorable="d"
-        Title="برنامج الشؤون القانونية - تسجيل الدخول" Height="400" Width="600" FlowDirection="RightToLeft">
-    <Grid>
+        Title="برنامج الشؤون القانونية - تسجيل الدخول"
+        FlowDirection="RightToLeft" Height="400" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" 
+        WindowStyle="SingleBorderWindow">
+    <Window.DataContext>
+        <viewmodels:LogInViewModel/>
+    </Window.DataContext>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=username}">
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FFE3E5EA" Offset="1"/>
+                <GradientStop Color="White" Offset="0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0" Grid.ColumnSpan="2">تسجيل الدخول</TextBlock>
-        <Label Content="اسم المستخدم" Width="90" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-        <TextBox x:Name="UserName" Width="200" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-        <Label Content="كلمة المرور" Width="90" Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-        <PasswordBox x:Name="Password" Width="200" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <Button x:Name="Confirm" Content="تأكيد" IsDefault="True"/>
-            <Button x:Name="Cancel" Content="إلغاء" IsCancel="True"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0"  Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource TitleBlock }" Margin="12">تسجيل الدخول</TextBlock>
+        <!--<Separator Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom"/>-->
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <Label Content="اسم المستخدم" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" />
+            <TextBox x:Name="username" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" TabIndex="1"
+                     Text="{Binding UserNameField}"/>
         </StackPanel>
-      
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+            <Label Content="كلمة المرور" Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" />
+            <PasswordBox x:Name="passwordBox" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" TabIndex="2"
+                         />
+        </StackPanel>
+        <!--<Separator Grid.Row="3" Grid.Column="1" VerticalAlignment="Top"/>-->
 
+        <Button x:Name="Confirm" Content="تأكيد"
+                    Grid.Row="3" Grid.Column="1"
+                    IsDefault="True" 
+                
+                Style="{StaticResource RoundButton}" TabIndex="3" VerticalAlignment="Top" Click="Confirm_Click"/>
+        <!--Command="{Binding LogInCommand}" CommandParameter="{Binding ElementName=passwordBox}"-->
+        <Button x:Name="Cancel" Content="إلغاء"
+                    Grid.Row="3" Grid.Column="2"
+                    IsCancel="True" Style="{StaticResource RoundButton}"  TabIndex="4" VerticalAlignment="Top"
+                Command="{Binding CancelCommand}"/>
 
     </Grid>
 </Window>

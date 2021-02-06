@@ -15,7 +15,7 @@ namespace LegalAffairs.Views
     /// <summary>
     /// Interaction logic for OutboxMain.xaml
     /// </summary>
-    public partial class OutboxMain : Window
+    public partial class OutboxMain 
     {
         public OutboxMain()
         {
