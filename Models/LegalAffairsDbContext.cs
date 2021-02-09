@@ -166,13 +166,19 @@ namespace LegalAffairs.Models
 
             modelBuilder.Entity<RuleAttachement>(entity =>
             {
-                entity.HasKey(e => new { e.RuleId, e.AttachmentNumber })
-                 .HasName("PK_rules_attachements");
+                entity.HasKey(e => new { e.RuleAttachementId})
+ .HasName("PK_rules_attachements");
+
+                entity.HasIndex(e => new { e.RuleId, e.AttachmentNumber })
+                .HasName("IX_rule_attachements")
+                .IsUnique();
+                //entity.HasKey(e => new { e.RuleId, e.AttachmentNumber })
+                // .HasName("PK_rules_attachements");
 
                 entity.HasOne(d => d.Rule)
                     .WithMany(p => p.RuleAttachements)
                     .HasForeignKey(d => d.RuleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_rule_attachements_rules");
             });
 

@@ -9,9 +9,12 @@ namespace LegalAffairs.Models
     public partial class RuleAttachement
     {
         [Key]
+        [Column("rule_attachement_id")]
+        public int RuleAttachementId { get; set; }
+
         [Column("rule_id")]
         public int RuleId { get; set; }
-        [Key]
+
         [Column("attachment_number")]
         public short AttachmentNumber { get; set; }
         [Column("path")]

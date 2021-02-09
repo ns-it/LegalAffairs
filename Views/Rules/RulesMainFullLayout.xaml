@@ -199,8 +199,8 @@
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl},Path=DataContext.UpdateModalCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
 
-                                <Button x:Name="InlineDelete" Content="🔗"
-                                        />
+                                <!--<Button x:Name="InlineDelete" Content="🔗"
+                                        />-->
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

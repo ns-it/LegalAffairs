@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Diagnostics.Contracts;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
+//using Microsoft.Web.Helpers;
 
 namespace LegalAffairs.ViewModels
 {
@@ -100,11 +101,112 @@ namespace LegalAffairs.ViewModels
             set { _currentRule = value; OnPropertyChanged("CurrentRule"); }
         }
 
+
+        private static void Copy(string inputFilePath, string outputFilePath)
+        {
+
+
+          
+
+            using (var inputFile = new FileStream(
+    inputFilePath,
+    FileMode.Open,
+    FileAccess.Read,
+    FileShare.ReadWrite))
+            {
+                using (var outputFile = new FileStream(outputFilePath, FileMode.Create))
+                {
+                    var buffer = new byte[0x10000];
+                    int bytes;
+
+                    while ((bytes = inputFile.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        outputFile.Write(buffer, 0, bytes);
+                    }
+                }
+            }
+            //int bufferSize = 1024 * 1024;
+
+            //using FileStream outStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+            //FileStream inStream = new FileStream(inputFilePath, FileMode.Open, FileAccess.ReadWrite,FileShare.ReadWrite);
+            //outStream.SetLength(inStream.Length);
+            //int bytesRead = -1;
+            //byte[] bytes = new byte[bufferSize];
+
+            //while ((bytesRead = inStream.Read(bytes, 0, bufferSize)) > 0)
+            //{
+            //    outStream.Write(bytes, 0, bytesRead);
+            //}
+
+            //outStream.Flush();
+            //outStream.Close();
+            //outStream.Dispose();
+
+            //inStream.Flush();
+            //inStream.Close();
+            //inStream.Dispose();
+
+        }
+
+
+
+
+
+
+        private static string tempPath = string.Empty;
         private string _attachementPath;
         public string AttachementPath
         {
             get { return _attachementPath; }
-            set { _attachementPath = value; OnPropertyChanged("AttachementPath"); }
+            set 
+            {
+                if (value != null)
+                {
+                    //Path.GetExtension(value);
+                    //tempPath = "D:\\attachements\\temp";
+
+                    tempPath = Path.GetTempFileName();            
+                    File.Copy(value, tempPath, true);
+                    _attachementPath = tempPath;
+
+                    //Directory.CreateDirectory(Path.GetDirectoryName(temp));
+                    //if (File.Exists(tempPath))
+                    //{
+
+                    //FileStream s = new FileStream(tempPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                    ////s.Lock();
+                    //using (s)
+                    //{
+
+
+                    //    //File.Delete(tempPath);
+                    //    //File.Copy(value, tempPath, true);
+
+
+                    //    _attachementPath = tempPath;
+                    //}
+                    //s.Close();
+                    //s.Dispose();
+                    //}
+                    //else
+                    //{
+                    //    File.Copy(value, tempPath, true);
+                    //    FileStream s = new FileStream(tempPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                    //    s.Close();
+                    //    s.Dispose();
+
+                    //    _attachementPath = tempPath;
+                    //}
+
+
+
+
+                }
+                else
+                    _attachementPath = "";
+                OnPropertyChanged("AttachementPath");
+
+            }
         }
 
         //[ MaxLength (3)]
@@ -210,7 +312,7 @@ namespace LegalAffairs.ViewModels
 
         //public bool HasErrors => throw new NotImplementedException();
 
-        private string defaultAttachementPath = "D:\\Nawzat\\Desktop\\New folder\\website.png";
+        //private string defaultAttachementPath = "D:\\Nawzat\\Desktop\\New folder\\website.png";
 
         private void InitializeUIComponents()
         {
@@ -354,6 +456,7 @@ namespace LegalAffairs.ViewModels
 
                 sourcePath = openFileDialog.FileName;
                 fileExtension = Path.GetExtension(sourcePath);
+                //destinationPath = @"\\10.10.46.103\attachements\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + (CurrentRule.RuleAttachements.Count + 1) + fileExtension;
 
                 //destinationPath = @"\\10.10.46.103\attachements\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + fileExtension;
                 destinationPath = @"D:\\attachements\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + (CurrentRule.RuleAttachements.Count + 1) + fileExtension;
@@ -395,6 +498,7 @@ namespace LegalAffairs.ViewModels
         public void AddAttachementAction(object o)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -403,8 +507,10 @@ namespace LegalAffairs.ViewModels
                 sourcePath = openFileDialog.FileName;
                 fileExtension = Path.GetExtension(sourcePath);
 
-                //destinationPath = @"\\10.10.46.103\attachements\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + fileExtension;
-                destinationPath = @"D:\\attachements\"+CurrentRule.IssuerId+"\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + (RuleAttachementsList.Count + 1) + fileExtension;
+
+                //destinationPath = @"\\10.10.46.103\attachements\" + CurrentRule.IssuerId + "\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + (RuleAttachementsList.Count + 1) + fileExtension;
+
+                destinationPath = @"D:\\attachements\" + CurrentRule.IssuerId + "\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + (RuleAttachementsList.Count + 1) + fileExtension;
 
                 AttachementPath = sourcePath;
 
@@ -435,6 +541,7 @@ namespace LegalAffairs.ViewModels
         public void EditAttachementAction(object o)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -445,7 +552,7 @@ namespace LegalAffairs.ViewModels
                 sourcePath = openFileDialog.FileName;
                 fileExtension = Path.GetExtension(sourcePath);
 
-                //destinationPath = @"\\10.10.46.103\attachements\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + fileExtension;
+                //destinationPath = @"\\10.10.46.103\attachements\" + CurrentRule.IssuerId + "\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + CurrentNode.Value.AttachmentNumber + fileExtension;
                 destinationPath = @"D:\\attachements\" + CurrentRule.IssuerId + "\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + CurrentNode.Value.AttachmentNumber + fileExtension;
 
                 string path = CurrentNode.Value.Path;
@@ -475,11 +582,48 @@ namespace LegalAffairs.ViewModels
             string path = CurrentNode.Value.Path;
             
             AttachementPath = null;
-            RuleAttachementsList.Remove(CurrentNode);
-            CurrentNode = RuleAttachementsList.Last;
 
+
+            var node = CurrentNode;
+            RuleAttachementsList.Remove(CurrentNode);
+            CurrentNode = node.Next;
+            //CurrentNode = CurrentNode.Next;
             File.Delete(path);
 
+
+            CurrentNode = RuleAttachementsList.First;
+
+            ReArrangeList();
+
+            CurrentNode = RuleAttachementsList.Last;
+            AttachementPath = CurrentNode.Value.Path;
+
+
+
+        
+
+
+            
+        }
+
+        private void ReArrangeList()
+        {
+            int i = 1;
+           while (CurrentNode != null)
+            {
+                CurrentNode.Value.AttachmentNumber = (short)(i);
+
+                fileExtension = Path.GetExtension(CurrentNode.Value.Path);
+
+                string newPath = @"D:\\attachements\" + CurrentRule.IssuerId + "\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + i + fileExtension;
+                File.Move(CurrentNode.Value.Path, newPath, true);
+                CurrentNode.Value.Path = newPath;
+
+                i += 1;
+
+                CurrentNode = CurrentNode.Next;
+
+            } 
         }
 
         public bool CanExecuteDeleteAttachement(object o)
@@ -489,11 +633,38 @@ namespace LegalAffairs.ViewModels
         public void SaveAttachementsAction(object o)
         {
             CurrentRule.RuleAttachements.Clear();
-
+            //short i = 1;
             foreach (var node in RuleAttachementsList)
             {
+                //var attachement = new RuleAttachement()
+                //{
+                //    RuleId = node.RuleId,
+                //    AttachmentNumber = i,
+
+                //};
+               
+
+                //string v = Path.GetFileNameWithoutExtension(node.Path);
+                //if (v.Equals(node.AttachmentNumber.ToString()))
+                //{
+                //    attachement.Path = node.Path;
+                //}
+                //else
+                //{
+                //    destinationPath = @"D:\\attachements\" + CurrentRule.IssuerId + "\\" + CurrentRule.RuleYear + "-" + CurrentRule.AnnualSerialNumber + "\\" + node.AttachmentNumber + fileExtension;
+                //    File.Move(node.Path, destinationPath, true);
+                //    attachement.Path = destinationPath;
+                //}
+
                 CurrentRule.RuleAttachements.Add(node);
+                //if()
+                //if( if Path.GetFileNameWithoutExtension)
+
+                //i++;
             }
+
+
+            //RulesMainFullViewModel.db.Rules.Update(CurrentRule);
 
             RulesMainFullViewModel.db.SaveChanges();
 
@@ -523,6 +694,10 @@ namespace LegalAffairs.ViewModels
         {
             //LinkedListNode<RuleAttachement> selectedNode = CurrentNode;
             CurrentNode = CurrentNode.Next;
+
+
+
+
             AttachementPath = CurrentNode.Value.Path;
         }
 
